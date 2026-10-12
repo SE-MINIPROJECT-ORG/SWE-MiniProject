@@ -1,0 +1,50 @@
+digraph UC1 {
+  rankdir=LR; splines=true; nodesep=0.35; ranksep=1.3;
+  fontname="Arial"; labelloc=t; fontsize=18;
+  label="Use Case Diagram 1: Account and Event Management (F1, F2)";
+  node [fontname="Arial", fontsize=11];
+  edge [fontname="Arial", fontsize=9, arrowsize=0.8];
+
+  subgraph cluster_actors_left { style=invis;
+    Visitor [shape=box, style="filled,rounded", fillcolor="#FFF2CC", label="«actor»\nVisitor"];
+    RU [shape=box, style="filled,rounded", fillcolor="#F2F2F2", label="«actor»\nRegistered User"];
+    Attendee [shape=box, style="filled,rounded", fillcolor="#DAE8FC", label="«actor»\nAttendee"];
+    Organizer [shape=box, style="filled,rounded", fillcolor="#D5E8D4", label="«actor»\nOrganizer"];
+    Admin [shape=box, style="filled,rounded", fillcolor="#F8CECC", label="«actor»\nAdmin"];
+  }
+
+  subgraph cluster_system {
+    label="Event Management System"; style="rounded"; color="#555555"; fontsize=14;
+    node [shape=ellipse, style=filled, fillcolor="#FFFFFF"];
+    UC_reg   [label="Register Account\n(EVT-F-001)"];
+    UC_login [label="Login\n(EVT-F-002)"];
+    UC_lock  [label="Lock Account\nafter 5 failures\n(EVT-F-003)"];
+    UC_logout[label="Logout\n(EVT-F-004)"];
+    UC_prof  [label="Manage Profile\n(EVT-F-007)"];
+    UC_users [label="Manage Users\nand Roles\n(EVT-F-006)"];
+    UC_browse[label="Browse, Search and\nFilter Events\n(EVT-F-016)"];
+    UC_create[label="Create Event\n(EVT-F-010)"];
+    UC_valid [label="Validate Event Data\n(EVT-F-011)"];
+    UC_edit  [label="Edit Event\n(EVT-F-012)"];
+    UC_pub   [label="Publish Event\n(EVT-F-013)"];
+    UC_cancel[label="Cancel Event\n(EVT-F-014)"];
+    UC_cancelreg[label="Cancel Registrations\nof the Event"];
+    UC_cat   [label="Manage Event\nCategories\n(EVT-F-015)"];
+  }
+
+  Attendee -> RU  [arrowhead=empty];
+  Organizer -> RU [arrowhead=empty];
+  Admin -> RU     [arrowhead=empty];
+
+  edge [dir=none];
+  Visitor -> UC_reg; Visitor -> UC_browse;
+  RU -> UC_login; RU -> UC_logout; RU -> UC_prof; RU -> UC_browse;
+  Organizer -> UC_create; Organizer -> UC_edit; Organizer -> UC_pub; Organizer -> UC_cancel;
+  Admin -> UC_users; Admin -> UC_cat;
+
+  edge [dir=forward, style=dashed, arrowhead=open];
+  UC_create -> UC_valid [label="«include»"];
+  UC_edit -> UC_valid [label="«include»"];
+  UC_cancel -> UC_cancelreg [label="«include»"];
+  UC_lock -> UC_login [label="«extend»"];
+}
