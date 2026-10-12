@@ -1,0 +1,46 @@
+digraph UC2 {
+  rankdir=LR; splines=true; nodesep=0.35; ranksep=1.3;
+  fontname="Arial"; labelloc=t; fontsize=18;
+  label="Use Case Diagram 2: Registration, Check-in, Notifications and Reports (F3, F4)";
+  node [fontname="Arial", fontsize=11];
+  edge [fontname="Arial", fontsize=9, arrowsize=0.8];
+
+  Attendee  [shape=box, style="filled,rounded", fillcolor="#DAE8FC", label="«actor»\nAttendee"];
+  Organizer [shape=box, style="filled,rounded", fillcolor="#D5E8D4", label="«actor»\nOrganizer"];
+  Admin     [shape=box, style="filled,rounded", fillcolor="#F8CECC", label="«actor»\nAdmin"];
+  Email     [shape=box, style="filled,rounded", fillcolor="#E1D5E7", label="«actor»\nEmail Service\n(external)"];
+
+  subgraph cluster_system {
+    label="Event Management System"; style="rounded"; color="#555555"; fontsize=14;
+    node [shape=ellipse, style=filled, fillcolor="#FFFFFF"];
+    R1 [label="Register for Event\n(EVT-F-020, 021)"];
+    R2 [label="Join Waitlist\n(EVT-F-022)"];
+    R3 [label="Cancel Registration\n(EVT-F-023)"];
+    R4 [label="Promote Waitlisted\nAttendee\n(EVT-F-024)"];
+    R5 [label="View My Registrations\n(EVT-F-025)"];
+    R6 [label="View Ticket with QR Code\n(EVT-F-026)"];
+    R7 [label="View Event Registrations\n(EVT-F-027)"];
+    C1 [label="Check In Attendee\n(EVT-F-030)"];
+    C2 [label="Validate Ticket\n(EVT-F-031)"];
+    N1 [label="Send Notification Email\n(EVT-F-032)"];
+    N2 [label="Send Reminder Email\n(EVT-F-033)"];
+    N3 [label="View In-app Notifications\n(EVT-F-034)"];
+    P1 [label="View Event Report\n(EVT-F-035)"];
+    P2 [label="Export Attendee CSV\n(EVT-F-036)"];
+    P3 [label="View Admin Dashboard\n(EVT-F-037)"];
+  }
+
+  edge [dir=none];
+  Attendee -> R1; Attendee -> R3; Attendee -> R5; Attendee -> R6; Attendee -> N3;
+  Organizer -> R7; Organizer -> C1; Organizer -> P1; Organizer -> P2;
+  Admin -> P3;
+  N1 -> Email; N2 -> Email;
+
+  edge [dir=forward, style=dashed, arrowhead=open];
+  R2 -> R1 [label="«extend»"];
+  R3 -> R4 [label="«include»"];
+  C1 -> C2 [label="«include»"];
+  R1 -> N1 [label="«include»"];
+  R4 -> N1 [label="«include»"];
+  R3 -> N1 [label="«include»"];
+}
