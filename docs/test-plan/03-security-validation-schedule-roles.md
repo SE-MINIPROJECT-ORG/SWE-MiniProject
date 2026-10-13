@@ -24,15 +24,15 @@ Security validation checks that the security requirements EVT-SR-001 to EVT-SR-0
 
 ## 7. Test Schedule
 
-Dates follow the project schedule (Sprint 1 on 19 to 23 Oct 2026 and Sprint 2 on 26 to 30 Oct 2026). Adjust them if the faculty changes the schedule.
+The schedule is expressed in project phases and sprints instead of calendar dates, so it stays valid if the faculty changes the dates.
 
-| Milestone | Date |
-|-----------|------|
-| Test plan and test case design | 12 to 16 Oct 2026 |
-| Test environment and CI setup | 19 Oct 2026 |
-| Sprint 1 test execution (first half of each feature) | 19 to 23 Oct 2026 |
-| Sprint 2 test execution and regression | 26 to 29 Oct 2026 |
-| Final results, Actual and Result columns completed, test summary | 30 Oct 2026 |
+| Milestone | Phase |
+|-----------|-------|
+| Test plan and test case design | Before Sprint 1 (this document) |
+| Test environment and CI setup | Start of Sprint 1 |
+| Sprint 1 test execution (first half of each feature) | Sprint 1 |
+| Sprint 2 test execution and regression | Sprint 2 |
+| Final results, Actual and Result columns completed, test summary | End of Sprint 2, before the code freeze |
 
 ## 8. Test Deliverables
 
