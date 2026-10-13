@@ -1,0 +1,25 @@
+@startuml
+title Sequence Diagram 4: Organizer Checks In an Attendee (F4)
+autonumber
+actor "Organizer" as P0
+participant "React UI" as P1
+participant "Check-in API" as P2
+participant "Check-in Service" as P3
+participant "Database" as P4
+participant "Audit Logger" as P5
+P0 -> P1 : Enter or scan ticket ID
+P1 -> P2 : POST /api/events/:id/checkins
+P2 -> P3 : checkIn(eventId, ticketId, organizerId)
+P3 -> P3 : Verify organizer owns the event
+P3 -> P4 : Find registration by ticket ID
+P4 --> P3 : Registration or none
+alt valid ticket, CONFIRMED, not used, same event
+P3 -> P4 : Set CHECKED_IN and timestamp
+P3 -> P5 : Log CHECKIN
+P2 --> P1 : 200 {attendeeName, checkedInAt}
+P1 --> P0 : Show success
+else invalid, other event, cancelled, waitlisted or used
+P2 --> P1 : 404 or 409 with specific message
+P1 --> P0 : Show error
+end
+@enduml
