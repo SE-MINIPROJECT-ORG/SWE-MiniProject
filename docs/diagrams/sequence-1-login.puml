@@ -1,0 +1,31 @@
+@startuml
+title Sequence Diagram 1: User Login with Account Lockout (F1)
+autonumber
+actor "User" as P0
+participant "React UI" as P1
+participant "Auth API" as P2
+participant "Auth Service" as P3
+participant "Database" as P4
+participant "Audit Logger" as P5
+P0 -> P1 : Enter email and password
+P1 -> P2 : POST /api/auth/login
+P2 -> P3 : login(email, password)
+P3 -> P4 : Find user by email
+P4 --> P3 : User record
+alt account active and not locked
+P3 -> P3 : Compare bcrypt hash
+alt password correct
+P3 -> P4 : Reset failed attempts
+P3 -> P5 : Log LOGIN_SUCCESS
+P3 --> P2 : Signed JWT (60 min)
+P2 --> P1 : 200 {token, user}
+P1 --> P0 : Open role dashboard
+else wrong password
+P3 -> P4 : Add failed attempt, lock at 5
+P3 -> P5 : Log LOGIN_FAILURE
+P2 --> P1 : 401 Invalid email or password
+end
+else locked or deactivated
+P2 --> P1 : 423 Account locked / 403 Deactivated
+end
+@enduml
