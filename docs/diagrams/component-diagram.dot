@@ -1,0 +1,48 @@
+digraph COMP {
+  rankdir=TB; compound=true; nodesep=0.35; ranksep=0.7; splines=true;
+  fontname="Arial"; labelloc=t; fontsize=18;
+  label="Component Diagram: Event Management System (Layered Architecture)";
+  node [fontname="Arial", fontsize=11, shape=box, style="filled,rounded", fillcolor="#FFFFFF"];
+  edge [fontname="Arial", fontsize=9, arrowsize=0.8];
+
+  subgraph cluster_client { label="Presentation Layer (Browser)"; style="rounded,filled"; fillcolor="#EAF2FB"; color="#6C8EBF";
+    SPA [label="React SPA\n(Auth, Event, Registration,\nOrganizer, Admin pages)", fillcolor="#DAE8FC"];
+  }
+
+  subgraph cluster_api { label="API Layer (Node.js + Express)"; style="rounded,filled"; fillcolor="#FDF6E3"; color="#D6B656";
+    MW [label="Security Middleware\n(JWT check, RBAC, rate limiter,\ninput validation)", fillcolor="#FFE6CC"];
+    CTRL [label="REST Controllers\n(Auth, Event, Registration,\nCheck-in, Report, Notification)", fillcolor="#FFF2CC"];
+    ERR [label="Error Handler\n(standard error format)", fillcolor="#FFF2CC"];
+  }
+
+  subgraph cluster_svc { label="Service Layer (Business Logic)"; style="rounded,filled"; fillcolor="#EEF7EA"; color="#82B366";
+    AUTH [label="Auth Module (F1)\nusers, login, roles", fillcolor="#D5E8D4"];
+    EVT [label="Event Module (F2)\nevents, categories, search", fillcolor="#D5E8D4"];
+    REG [label="Registration Module (F3)\nseats, waitlist, tickets", fillcolor="#D5E8D4"];
+    CHK [label="Check-in Module (F4)\nticket validation", fillcolor="#D5E8D4"];
+    RPT [label="Reporting Module (F4)\nreports, CSV, dashboard", fillcolor="#D5E8D4"];
+    NOT [label="Notification Module (F4)\nemail and in-app", fillcolor="#D5E8D4"];
+    SCH [label="Scheduler\n(24-hour reminders)", fillcolor="#D5E8D4"];
+    AUD [label="Audit Logger", fillcolor="#D5E8D4"];
+  }
+
+  subgraph cluster_data { label="Data Layer"; style="rounded,filled"; fillcolor="#F5EEF8"; color="#9673A6";
+    REPO [label="Repositories\n(parameterized queries)", fillcolor="#E1D5E7"];
+    DB [label="PostgreSQL\nusers, events, categories,\nregistrations, notifications,\naudit_logs, revoked_tokens", shape=cylinder, fillcolor="#E1D5E7"];
+  }
+
+  SMTP [label="Email Service\n(SMTP, external)", fillcolor="#F8CECC"];
+
+  SPA -> MW [label="HTTPS / JSON"];
+  MW -> CTRL;
+  CTRL -> ERR [style=dashed];
+  CTRL -> AUTH; CTRL -> EVT; CTRL -> REG; CTRL -> CHK; CTRL -> RPT; CTRL -> NOT;
+  EVT -> REG [label="cancel registrations", style=dashed];
+  REG -> NOT [label="notify", style=dashed];
+  EVT -> NOT [style=dashed];
+  SCH -> NOT [label="trigger", style=dashed];
+  AUTH -> AUD [style=dashed]; EVT -> AUD [style=dashed]; CHK -> AUD [style=dashed];
+  AUTH -> REPO; EVT -> REPO; REG -> REPO; CHK -> REPO; RPT -> REPO; NOT -> REPO; AUD -> REPO;
+  REPO -> DB;
+  NOT -> SMTP [label="SMTP"];
+}
