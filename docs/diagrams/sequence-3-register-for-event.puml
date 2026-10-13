@@ -1,0 +1,31 @@
+@startuml
+title Sequence Diagram 3: Attendee Registers for an Event (F3)
+autonumber
+actor "Attendee" as P0
+participant "React UI" as P1
+participant "Registration API" as P2
+participant "Registration Service" as P3
+participant "Database" as P4
+participant "Notification Service" as P5
+P0 -> P1 : Click Register
+P1 -> P2 : POST /api/events/:id/registrations
+P2 -> P3 : register(eventId, attendeeId)
+P3 -> P4 : BEGIN and lock the event row
+P3 -> P4 : Check status, start time, duplicate
+P4 --> P3 : Check results
+alt event open and not already registered
+P3 -> P4 : Count confirmed registrations
+alt confirmed less than capacity
+P3 -> P4 : Insert CONFIRMED with ticket ID
+else event is full
+P3 -> P4 : Insert WAITLISTED with position
+end
+P3 -> P4 : COMMIT
+P3 -> P5 : Send confirmation or waitlist notice
+P2 --> P1 : 201 {status, ticketId or position}
+P1 --> P0 : Show confirmation
+else closed, started or duplicate
+P3 -> P4 : ROLLBACK
+P2 --> P1 : 400 Not open / 409 Already registered
+end
+@enduml
