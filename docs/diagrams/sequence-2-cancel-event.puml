@@ -1,0 +1,29 @@
+@startuml
+title Sequence Diagram 2: Organizer Cancels an Event (F2)
+autonumber
+actor "Organizer" as P0
+participant "React UI" as P1
+participant "Event API" as P2
+participant "Event Service" as P3
+participant "Registration Service" as P4
+participant "Notification Service" as P5
+participant "Database" as P6
+participant "Audit Logger" as P7
+P0 -> P1 : Click Cancel Event
+P1 -> P2 : POST /api/events/:id/cancel
+P2 -> P3 : cancelEvent(eventId, organizerId)
+P3 -> P6 : Load event
+P6 --> P3 : Event record
+alt organizer owns the event and it is not cancelled
+P3 -> P6 : Set status CANCELLED
+P3 -> P7 : Log EVENT_CANCELLED
+P3 -> P4 : cancelAllRegistrations(eventId)
+P4 -> P6 : Set registrations CANCELLED
+P4 -> P5 : Notify attendees: event cancelled
+P5 -> P6 : Save in-app notifications
+P3 --> P2 : Cancellation result
+P2 --> P1 : 200 {status: CANCELLED}
+else not the owner or already cancelled
+P2 --> P1 : 403 Forbidden / 409 Conflict
+end
+@enduml
