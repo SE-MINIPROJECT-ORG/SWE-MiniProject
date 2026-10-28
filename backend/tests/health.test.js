@@ -16,7 +16,7 @@ describe('GET /health', () => {
   it('returns 200 when the database is reachable', async () => {
     db.query.mockResolvedValueOnce({ rows: [{ ok: 1 }] });
     const res = await request(app).get('/health');
-    expect(res.status).toBe(201);
+    expect(res.status).toBe(200);
     expect(res.body).toEqual({ status: 'ok', api: 'up', database: 'up' });
   });
 
