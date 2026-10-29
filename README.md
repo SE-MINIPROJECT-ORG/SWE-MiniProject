@@ -60,7 +60,73 @@ The Event Management System lets organizers publish events and manage capacity a
 
 ## Getting Started
 
-Setup and run instructions will be added once the backend and frontend are scaffolded.
+### Run the whole system with Docker (recommended)
+
+Requires Docker Desktop.
+
+```
+docker compose up --build
+```
+
+| What | URL |
+|------|-----|
+| Web app | http://localhost:8080 |
+| API health check | http://localhost:5000/health |
+| Test emails (MailHog) | http://localhost:8025 |
+
+The backend applies the database migrations and creates the test accounts on start. All test accounts use the password `Test@1234`: `attendee1@ems.test` to `attendee4@ems.test`, `organizer1@ems.test`, `organizer2@ems.test` and `admin@ems.test`.
+
+Stop with `Ctrl+C`, then `docker compose down`. Add `-v` to also delete the database.
+
+### Run for development
+
+Start only the database and mail catcher with Docker, then run the backend and frontend directly:
+
+```
+docker compose up -d db mailhog
+cd backend
+copy .env.example .env
+npm install
+npm run migrate
+npm run seed
+npm run dev
+```
+
+In a second terminal:
+
+```
+cd frontend
+npm install
+npm run dev
+```
+
+The frontend runs at http://localhost:5173 and forwards `/api` calls to the backend on port 5000.
+
+### Tests
+
+```
+cd backend
+npm test
+cd ../frontend
+npm test
+```
+
+GitHub Actions runs lint, tests and the frontend build on every pull request.
+
+### Static analysis (SonarQube)
+
+```
+docker compose -f docker-compose.sonar.yml up -d
+```
+
+Open http://localhost:9000 (first login `admin` / `admin`, then set a new password). Create a local project with the key `ems` and generate a token. Then run the tests (for coverage) and the scanner from the repository root:
+
+```
+cd backend
+npm test
+cd ..
+docker run --rm -e SONAR_HOST_URL=http://host.docker.internal:9000 -e SONAR_TOKEN=<your-token> -v "${PWD}:/usr/src" sonarsource/sonar-scanner-cli
+```
 
 ## Workflow
 
@@ -68,8 +134,8 @@ All work is done on feature branches and merged into `main` through reviewed pul
 
 ## Project Status
 
-- [ ] Requirements (SRS)
-- [ ] Architecture and Design (SAD)
-- [ ] Test Plan
+- [x] Requirements (SRS)
+- [x] Architecture and Design (SAD)
+- [x] Test Plan
 - [ ] Implementation
 - [ ] System validation and demo
