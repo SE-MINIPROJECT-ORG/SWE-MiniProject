@@ -257,3 +257,50 @@ button.primary:disabled {
   font-weight: 600;
   color: #b54708;
 }
+
+/* Registrations (F3) */
+.register-box {
+  margin-top: 1rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.badge-confirmed {
+  background: #d1fadf;
+  color: #05603a;
+}
+
+.badge-waitlisted {
+  background: #fef0c7;
+  color: #93370d;
+}
+
+.badge-cancelled {
+  background: #eaecf0;
+  color: #344054;
+}
+
+.badge-checked_in {
+  background: #d1e9ff;
+  color: #1849a9;
+}
+
+.ticket {
+  font-family: ui-monospace, Consolas, monospace;
+}
+
+button.danger {
+  padding: 0.45rem 0.9rem;
+  border: 1px solid #b42318;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #b42318;
+  font: inherit;
+  cursor: pointer;
+}

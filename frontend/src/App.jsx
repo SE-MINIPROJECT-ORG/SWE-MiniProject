@@ -7,6 +7,7 @@ import RegisterPage from './pages/RegisterPage.jsx';
 import EventDetailPage from './pages/EventDetailPage.jsx';
 import CreateEventPage from './pages/CreateEventPage.jsx';
 import MyEventsPage from './pages/MyEventsPage.jsx';
+import MyRegistrationsPage from './pages/MyRegistrationsPage.jsx';
 import RolePage from './pages/RolePage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
@@ -22,7 +23,7 @@ export default function App() {
           path="/attendee"
           element={
             <RequireRole roles={['ATTENDEE']}>
-              <RolePage title="My registrations" />
+              <MyRegistrationsPage />
             </RequireRole>
           }
         />
