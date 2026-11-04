@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext.jsx';
+import RegisterButton from '../components/RegisterButton.jsx';
 import { eventsApi } from '../services/eventsApi.js';
 import { formatDateTime, seatsText } from '../utils/events.js';
 
@@ -10,12 +11,14 @@ export default function EventDetailPage() {
   const [event, setEvent] = useState(null);
   const [error, setError] = useState('');
 
-  useEffect(() => {
+  const load = useCallback(() => {
     eventsApi
       .get(id, token)
       .then((data) => setEvent(data.event))
       .catch((err) => setError(err.status === 404 ? 'Event not found.' : err.message));
   }, [id, token]);
+
+  useEffect(load, [load]);
 
   if (error) {
     return (
@@ -46,6 +49,7 @@ export default function EventDetailPage() {
         <dd>{seatsText(event)}</dd>
       </dl>
       {event.description && <p className="description">{event.description}</p>}
+      <RegisterButton event={event} onRegistered={load} />
     </section>
   );
 }
