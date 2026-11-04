@@ -132,10 +132,14 @@ docker run --rm -e SONAR_HOST_URL=http://host.docker.internal:9000 -e SONAR_TOKE
 
 All work is done on feature branches and merged into `main` through reviewed pull requests. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
+## Sprint Reviews
+
+- [Sprint 1 review, demo video and deviations](docs/sprint-reviews/sprint-1-review.md)
+
 ## Project Status
 
 - [x] Requirements (SRS)
 - [x] Architecture and Design (SAD)
 - [x] Test Plan
-- [ ] Implementation
+- [ ] Implementation (Sprint 1 done, Sprint 2 in progress)
 - [ ] System validation and demo
