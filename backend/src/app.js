@@ -4,6 +4,7 @@ const requestId = require('./middleware/requestId');
 const { apiLimiter } = require('./middleware/rateLimiter');
 const { notFound, errorHandler } = require('./middleware/errorHandler');
 const healthRoutes = require('./modules/health/health.routes');
+const { authRouter, usersRouter } = require('./modules/auth/auth.routes');
 
 const app = express();
 
@@ -16,8 +17,8 @@ app.use(express.json({ limit: '100kb' }));
 
 app.use(healthRoutes);
 app.use('/api', apiLimiter);
-// Feature routers are mounted here as each module is built, for example:
-// app.use('/api/auth', authRoutes);
+app.use('/api/auth', authRouter);
+app.use('/api/users', usersRouter);
 
 app.use(notFound);
 app.use(errorHandler);
