@@ -1,34 +1,63 @@
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext.jsx';
+import { homePathForRole } from '../utils/navLinks.js';
 
-const DEMO_ROLES = [
-  { role: 'ATTENDEE', path: '/attendee', label: 'Continue as Attendee' },
-  { role: 'ORGANIZER', path: '/organizer', label: 'Continue as Organizer' },
-  { role: 'ADMIN', path: '/admin', label: 'Continue as Admin' },
-];
-
-// Demo-only login so the role-based navigation can be shown.
-// It is replaced by the real email and password login (EVT-F-002).
 export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const state = location.state || {};
 
-  const choose = (item) => {
-    login({ name: item.role.toLowerCase(), role: item.role });
-    navigate(item.path);
+  const [email, setEmail] = useState(state.email || '');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
+
+  const submit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setBusy(true);
+    try {
+      const user = await login(email.trim(), password);
+      navigate(state.from || homePathForRole(user.role), { replace: true });
+    } catch (err) {
+      setError(err.message);
+      setBusy(false);
+    }
   };
 
   return (
-    <section>
+    <section className="narrow">
       <h1>Login</h1>
-      <p>Demo only: choose a role to see its navigation.</p>
-      <div className="button-row">
-        {DEMO_ROLES.map((item) => (
-          <button key={item.role} type="button" onClick={() => choose(item)}>
-            {item.label}
-          </button>
-        ))}
-      </div>
+      {state.registered && <p className="success">Account created. You can log in now.</p>}
+      <form className="form" onSubmit={submit} noValidate>
+        <label>
+          Email
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" required />
+        </label>
+        <label>
+          Password
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
+            required
+          />
+        </label>
+        {error && (
+          <p className="error" role="alert">
+            {error}
+          </p>
+        )}
+        <button type="submit" className="primary" disabled={busy}>
+          {busy ? 'Logging in...' : 'Login'}
+        </button>
+      </form>
+      <p>
+        No account yet? <Link to="/register">Sign up</Link>
+      </p>
     </section>
   );
 }

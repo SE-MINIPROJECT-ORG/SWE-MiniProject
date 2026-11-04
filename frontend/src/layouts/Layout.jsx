@@ -1,10 +1,16 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext.jsx';
 import { getNavLinks } from '../utils/navLinks.js';
 
 export default function Layout() {
   const { role, user, logout } = useAuth();
+  const navigate = useNavigate();
   const links = getNavLinks(role);
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/');
+  };
 
   return (
     <div className="app">
@@ -17,9 +23,12 @@ export default function Layout() {
             </NavLink>
           ))}
           {user && (
-            <button type="button" className="link-button" onClick={logout}>
-              Logout
-            </button>
+            <>
+              <span className="user-name">{user.name}</span>
+              <button type="button" className="link-button" onClick={handleLogout}>
+                Logout
+              </button>
+            </>
           )}
         </nav>
       </header>
