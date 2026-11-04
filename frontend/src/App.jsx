@@ -4,6 +4,9 @@ import RequireRole from './components/RequireRole.jsx';
 import HomePage from './pages/HomePage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
+import EventDetailPage from './pages/EventDetailPage.jsx';
+import CreateEventPage from './pages/CreateEventPage.jsx';
+import MyEventsPage from './pages/MyEventsPage.jsx';
 import RolePage from './pages/RolePage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
@@ -14,6 +17,7 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/events/:id" element={<EventDetailPage />} />
         <Route
           path="/attendee"
           element={
@@ -26,7 +30,15 @@ export default function App() {
           path="/organizer"
           element={
             <RequireRole roles={['ORGANIZER']}>
-              <RolePage title="My events" />
+              <MyEventsPage />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/organizer/new"
+          element={
+            <RequireRole roles={['ORGANIZER']}>
+              <CreateEventPage />
             </RequireRole>
           }
         />
