@@ -159,3 +159,101 @@ button.primary:disabled {
 .user-name {
   opacity: 0.85;
 }
+
+/* Events (F2) */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.filters input,
+.filters select {
+  padding: 0.5rem;
+  border: 1px solid #9aa5b1;
+  border-radius: 4px;
+  font: inherit;
+}
+
+.filters button:not(.primary),
+.pagination button {
+  padding: 0.5rem 0.9rem;
+  border: 1px solid #1f3a5f;
+  border-radius: 4px;
+  background: #ffffff;
+  font: inherit;
+  cursor: pointer;
+}
+
+.card-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.card {
+  padding: 0.9rem 1rem;
+  background: #ffffff;
+  border: 1px solid #e4e7eb;
+  border-radius: 6px;
+}
+
+.card h2 {
+  margin: 0 0 0.3rem;
+  font-size: 1.15rem;
+}
+
+.card p {
+  margin: 0.3rem 0;
+}
+
+.muted {
+  color: #52606d;
+}
+
+.pagination {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.details {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.4rem 1rem;
+}
+
+.details dt {
+  font-weight: 600;
+}
+
+.details dd {
+  margin: 0;
+}
+
+.description {
+  white-space: pre-wrap;
+}
+
+.title-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.button-link {
+  padding: 0.5rem 0.9rem;
+  border-radius: 4px;
+  background: #1f3a5f;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.status-note {
+  font-weight: 600;
+  color: #b54708;
+}
