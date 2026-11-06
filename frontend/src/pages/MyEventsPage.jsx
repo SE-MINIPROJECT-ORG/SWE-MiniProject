@@ -56,6 +56,13 @@ export default function MyEventsPage() {
             <p>
               Status: <strong>{event.status}</strong> · {event.confirmedCount} of {event.capacity} seats taken
             </p>
+            <div className="button-row">
+              {event.status === 'PUBLISHED' && (
+                <Link className="button-link" to={`/organizer/events/${event.id}/checkin`}>
+                  Check-in
+                </Link>
+              )}
+            </div>
             {event.status === 'DRAFT' && (
               <button type="button" className="primary" onClick={() => publish(event)}>
                 Publish

@@ -1,6 +1,7 @@
 const app = require('./app');
 const config = require('./config/env');
 const logger = require('./utils/logger');
+const { startScheduler } = require('./modules/notifications/scheduler');
 
 // Tokens cannot be signed without a secret (EVT-SR-002), so refuse to start.
 if (!config.jwtSecret) {
@@ -10,4 +11,5 @@ if (!config.jwtSecret) {
 
 app.listen(config.port, () => {
   logger.info('EMS backend started', { port: config.port });
+  startScheduler();
 });
