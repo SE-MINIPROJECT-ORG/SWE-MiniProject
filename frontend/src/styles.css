@@ -304,3 +304,26 @@ button.danger {
   font: inherit;
   cursor: pointer;
 }
+
+/* Notifications and check-in (F4) */
+.card.unread {
+  border-left: 4px solid #1f3a5f;
+}
+
+.badge-note {
+  background: #e0eaff;
+  color: #1f3a5f;
+}
+
+.card .button-row {
+  margin-top: 0.5rem;
+}
+
+.card button:not(.primary):not(.danger) {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid #1f3a5f;
+  border-radius: 4px;
+  background: #ffffff;
+  font: inherit;
+  cursor: pointer;
+}
