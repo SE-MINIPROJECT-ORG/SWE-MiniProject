@@ -11,5 +11,12 @@ const attendeeOnly = [authenticate, requireRole('ATTENDEE')];
 router.post('/events/:id/registrations', attendeeOnly, asyncHandler(controller.register));
 router.get('/registrations/me', attendeeOnly, asyncHandler(controller.mine));
 router.post('/registrations/:id/cancel', attendeeOnly, asyncHandler(controller.cancel));
+router.get('/registrations/:id/ticket', attendeeOnly, asyncHandler(controller.ticket));
+router.get(
+  '/events/:id/registrations',
+  authenticate,
+  requireRole('ORGANIZER', 'ADMIN'),
+  asyncHandler(controller.forEvent)
+);
 
 module.exports = router;

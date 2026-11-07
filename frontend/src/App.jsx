@@ -10,6 +10,8 @@ import MyEventsPage from './pages/MyEventsPage.jsx';
 import MyRegistrationsPage from './pages/MyRegistrationsPage.jsx';
 import NotificationsPage from './pages/NotificationsPage.jsx';
 import CheckInPage from './pages/CheckInPage.jsx';
+import TicketPage from './pages/TicketPage.jsx';
+import EventRegistrationsPage from './pages/EventRegistrationsPage.jsx';
 import RolePage from './pages/RolePage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
@@ -66,6 +68,22 @@ export default function App() {
           element={
             <RequireRole roles={['ORGANIZER', 'ADMIN']}>
               <CheckInPage />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/attendee/tickets/:id"
+          element={
+            <RequireRole roles={['ATTENDEE']}>
+              <TicketPage />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/organizer/events/:id/registrations"
+          element={
+            <RequireRole roles={['ORGANIZER', 'ADMIN']}>
+              <EventRegistrationsPage />
             </RequireRole>
           }
         />

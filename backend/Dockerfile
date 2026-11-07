@@ -5,6 +5,7 @@ COPY package.json package-lock.json ./
 RUN npm ci --omit=dev
 COPY src ./src
 COPY db ./db
+COPY scripts ./scripts
 USER node
 EXPOSE 5000
 CMD ["node", "src/server.js"]

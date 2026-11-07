@@ -7,7 +7,12 @@ jest.mock('../src/modules/auth/auth.repository');
 jest.mock('../src/modules/registrations/registrations.repository');
 jest.mock('../src/modules/notifications/notification.service', () => ({
   notify: jest.fn(),
-  TYPES: { REGISTRATION_CONFIRMED: 'REGISTRATION_CONFIRMED', WAITLISTED: 'WAITLISTED', REGISTRATION_CANCELLED: 'REGISTRATION_CANCELLED' },
+  TYPES: {
+    REGISTRATION_CONFIRMED: 'REGISTRATION_CONFIRMED',
+    WAITLISTED: 'WAITLISTED',
+    REGISTRATION_CANCELLED: 'REGISTRATION_CANCELLED',
+    PROMOTED: 'PROMOTED',
+  },
 }));
 
 const db = require('../src/config/db');
@@ -169,5 +174,99 @@ describe('GET /api/registrations/me (EVT-F-025)', () => {
 
   it('requires login', async () => {
     expect((await request(app).get('/api/registrations/me')).status).toBe(401);
+  });
+});
+
+describe('waitlist promotion on cancel (EVT-F-024)', () => {
+  beforeEach(() => {
+    repository.lockEvent.mockResolvedValue(event({ capacity: 2 }));
+    repository.findById.mockResolvedValue(reg());
+    repository.lockById.mockResolvedValue(reg());
+    repository.markCancelled.mockResolvedValue(reg({ status: 'CANCELLED' }));
+  });
+
+  it('promotes the first waitlisted attendee when a confirmed seat is released', async () => {
+    repository.countSeatsTaken.mockResolvedValue(1);
+    repository.firstWaitlisted.mockResolvedValue([{ id: 201, user_id: 3, user_name: 'Attendee Three', user_email: 'attendee3@ems.test' }]);
+    repository.promote.mockResolvedValue(reg({ id: 201, user_id: 3, status: 'CONFIRMED', ticket_id: 'TKT-201' }));
+
+    const res = await request(app).post('/api/registrations/100/cancel').set('Authorization', ATTENDEE);
+
+    expect(res.status).toBe(200);
+    expect(res.body.registration.promotedRegistrationId).toBe(201);
+    expect(repository.firstWaitlisted.mock.calls[0][2]).toBe(1);
+    expect(repository.renumberWaitlist).toHaveBeenCalledWith(mockClient, 10);
+    expect(notify).toHaveBeenCalledWith('PROMOTED', expect.objectContaining({ email: 'attendee3@ems.test' }), expect.any(Object), expect.any(Object));
+  });
+
+  it('promotes nobody when no seat is free, but still renumbers the waitlist', async () => {
+    repository.countSeatsTaken.mockResolvedValue(2);
+    const res = await request(app).post('/api/registrations/100/cancel').set('Authorization', ATTENDEE);
+    expect(res.body.registration.promotedRegistrationId).toBeNull();
+    expect(repository.firstWaitlisted).not.toHaveBeenCalled();
+    expect(repository.renumberWaitlist).toHaveBeenCalled();
+  });
+});
+
+describe('GET /api/registrations/:id/ticket (EVT-F-026)', () => {
+  const ticketRow = (change = {}) => ({
+    id: 100, user_id: 1, status: 'CONFIRMED', ticket_id: 'TKT-ABC123', checked_in_at: null, user_name: 'Attendee One',
+    event_id: 10, title: 'Tech Talk', venue: 'Hall A', start_time: inDays(5), end_time: inDays(6), event_status: 'PUBLISHED', ...change,
+  });
+
+  it('returns the ticket with a QR code image of the ticket ID', async () => {
+    repository.findTicket.mockResolvedValue(ticketRow());
+    const res = await request(app).get('/api/registrations/100/ticket').set('Authorization', ATTENDEE);
+    expect(res.status).toBe(200);
+    expect(res.body.ticket).toMatchObject({ ticketId: 'TKT-ABC123', event: { title: 'Tech Talk' } });
+    expect(res.body.ticket.qrCode).toMatch(/^data:image\/png;base64,/);
+  });
+
+  it('refuses another attendee’s ticket with 403 (EVT-SR-005)', async () => {
+    repository.findTicket.mockResolvedValue(ticketRow({ user_id: 1 }));
+    expect((await request(app).get('/api/registrations/100/ticket').set('Authorization', OTHER_ATTENDEE)).status).toBe(403);
+  });
+
+  it.each(['WAITLISTED', 'CANCELLED'])('refuses a %s registration with 409', async (status) => {
+    repository.findTicket.mockResolvedValue(ticketRow({ status }));
+    const res = await request(app).get('/api/registrations/100/ticket').set('Authorization', ATTENDEE);
+    expect(res.status).toBe(409);
+  });
+
+  it('answers 404 for an unknown registration', async () => {
+    repository.findTicket.mockResolvedValue(null);
+    expect((await request(app).get('/api/registrations/9/ticket').set('Authorization', ATTENDEE)).status).toBe(404);
+  });
+});
+
+describe('GET /api/events/:id/registrations (EVT-F-027)', () => {
+  const rows = [
+    { id: 1, name: 'Attendee One', email: 'a1@ems.test', status: 'CONFIRMED', ticket_id: 'TKT-1', queue_position: null, created_at: 'x', checked_in_at: null },
+    { id: 2, name: 'Attendee Two', email: 'a2@ems.test', status: 'WAITLISTED', ticket_id: 'TKT-2', queue_position: 1, created_at: 'y', checked_in_at: null },
+  ];
+
+  it('lists registrations with name, email, status and time for the organizer', async () => {
+    repository.findEvent.mockResolvedValue({ id: 10, organizer_id: 5, title: 'Tech Talk' });
+    repository.listForEvent.mockResolvedValue(rows);
+    const res = await request(app).get('/api/events/10/registrations').set('Authorization', ORGANIZER);
+    expect(res.status).toBe(200);
+    expect(res.body.registrations[0]).toMatchObject({ name: 'Attendee One', email: 'a1@ems.test', status: 'CONFIRMED', registeredAt: 'x' });
+    expect(res.body.registrations[1].ticketId).toBeNull();
+  });
+
+  it('refuses another organizer’s event with 403', async () => {
+    repository.findEvent.mockResolvedValue({ id: 10, organizer_id: 6, title: 'Other' });
+    const res = await request(app).get('/api/events/10/registrations').set('Authorization', ORGANIZER);
+    expect(res.status).toBe(403);
+    expect(repository.listForEvent).not.toHaveBeenCalled();
+  });
+
+  it('refuses attendees with 403', async () => {
+    expect((await request(app).get('/api/events/10/registrations').set('Authorization', ATTENDEE)).status).toBe(403);
+  });
+
+  it('answers 404 for an unknown event', async () => {
+    repository.findEvent.mockResolvedValue(null);
+    expect((await request(app).get('/api/events/99/registrations').set('Authorization', ORGANIZER)).status).toBe(404);
   });
 });

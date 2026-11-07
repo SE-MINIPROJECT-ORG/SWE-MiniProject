@@ -327,3 +327,51 @@ button.danger {
   font: inherit;
   cursor: pointer;
 }
+
+/* Tickets and registration lists (F3). Tables scroll inside their box on
+   narrow screens, so pages never scroll sideways (EVT-NF-003). */
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+}
+
+.table th,
+.table td {
+  padding: 0.5rem 0.6rem;
+  border-bottom: 1px solid #e4e7eb;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.button-link.secondary {
+  background: #ffffff;
+  color: #1f3a5f;
+  border: 1px solid #1f3a5f;
+}
+
+.ticket-page .qr {
+  display: block;
+  margin: 1rem 0;
+  max-width: 100%;
+  height: auto;
+}
+
+.ticket-id {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+@media print {
+  .header,
+  .footer,
+  .no-print {
+    display: none;
+  }
+}
