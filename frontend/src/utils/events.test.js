@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { validateEventForm, localInputToIso, seatsText } from './events.js';
+import { validateEventForm, localInputToIso, seatsText, isoToLocalInput, canChangeEvent } from './events.js';
 
 const now = new Date('2026-11-01T10:00:00');
 const valid = {
@@ -42,5 +42,25 @@ describe('seatsText', () => {
   it('shows free seats or that the event is full', () => {
     expect(seatsText({ seatsLeft: 3, capacity: 10 })).toBe('3 of 10 seats left');
     expect(seatsText({ seatsLeft: 0, capacity: 10 })).toBe('Full (waitlist open)');
+  });
+});
+
+describe('isoToLocalInput', () => {
+  it('round-trips with localInputToIso', () => {
+    expect(isoToLocalInput(localInputToIso('2026-11-10T10:30'))).toBe('2026-11-10T10:30');
+  });
+
+  it('returns an empty string for missing or bad input', () => {
+    expect(isoToLocalInput('')).toBe('');
+    expect(isoToLocalInput('nope')).toBe('');
+  });
+});
+
+describe('canChangeEvent', () => {
+  const now = new Date('2026-11-01T10:00:00Z');
+  it('allows changes before the start unless cancelled', () => {
+    expect(canChangeEvent({ status: 'PUBLISHED', startTime: '2026-11-05T10:00:00Z' }, now)).toBe(true);
+    expect(canChangeEvent({ status: 'CANCELLED', startTime: '2026-11-05T10:00:00Z' }, now)).toBe(false);
+    expect(canChangeEvent({ status: 'DRAFT', startTime: '2026-10-05T10:00:00Z' }, now)).toBe(false);
   });
 });

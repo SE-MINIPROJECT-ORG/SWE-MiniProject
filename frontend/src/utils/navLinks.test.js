@@ -13,8 +13,10 @@ describe('getNavLinks', () => {
     expect(labels('ATTENDEE')).not.toContain('My Events');
   });
 
-  it('shows the admin console only to an admin', () => {
+  it('shows the admin console and categories only to an admin', () => {
     expect(labels('ADMIN')).toContain('Admin Console');
+    expect(labels('ADMIN')).toContain('Categories');
+    expect(labels('ORGANIZER')).not.toContain('Categories');
     expect(labels('ORGANIZER')).not.toContain('Admin Console');
   });
 

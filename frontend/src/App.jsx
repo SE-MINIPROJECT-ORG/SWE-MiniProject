@@ -12,6 +12,8 @@ import NotificationsPage from './pages/NotificationsPage.jsx';
 import CheckInPage from './pages/CheckInPage.jsx';
 import TicketPage from './pages/TicketPage.jsx';
 import EventRegistrationsPage from './pages/EventRegistrationsPage.jsx';
+import EditEventPage from './pages/EditEventPage.jsx';
+import AdminCategoriesPage from './pages/AdminCategoriesPage.jsx';
 import RolePage from './pages/RolePage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
@@ -84,6 +86,22 @@ export default function App() {
           element={
             <RequireRole roles={['ORGANIZER', 'ADMIN']}>
               <EventRegistrationsPage />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/organizer/events/:id/edit"
+          element={
+            <RequireRole roles={['ORGANIZER', 'ADMIN']}>
+              <EditEventPage />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/admin/categories"
+          element={
+            <RequireRole roles={['ADMIN']}>
+              <AdminCategoriesPage />
             </RequireRole>
           }
         />

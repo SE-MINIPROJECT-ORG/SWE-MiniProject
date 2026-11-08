@@ -32,4 +32,33 @@ async function categories(req, res) {
   res.status(200).json({ categories: await service.listCategories() });
 }
 
-module.exports = { create, publish, getOne, search, mine, categories };
+async function update(req, res) {
+  res.status(200).json({ event: await service.updateEvent(eventId(req), req.body, req.user) });
+}
+
+async function cancel(req, res) {
+  res.status(200).json({ event: await service.cancelEvent(eventId(req), req.user) });
+}
+
+function categoryId(req) {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id) || id < 1) throw new AppError(404, 'NOT_FOUND', 'Category not found');
+  return id;
+}
+
+async function createCategory(req, res) {
+  res.status(201).json({ category: await service.createCategory(req.body) });
+}
+
+async function renameCategory(req, res) {
+  res.status(200).json({ category: await service.renameCategory(categoryId(req), req.body) });
+}
+
+async function deleteCategory(req, res) {
+  await service.deleteCategory(categoryId(req));
+  res.status(204).end();
+}
+
+module.exports = {
+  create, publish, getOne, search, mine, categories, update, cancel, createCategory, renameCategory, deleteCategory,
+};

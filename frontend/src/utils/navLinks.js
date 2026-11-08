@@ -8,7 +8,10 @@ const BY_ROLE = {
   ],
   ATTENDEE: [{ to: '/attendee', label: 'My Registrations' }],
   ORGANIZER: [{ to: '/organizer', label: 'My Events' }],
-  ADMIN: [{ to: '/admin', label: 'Admin Console' }],
+  ADMIN: [
+    { to: '/admin', label: 'Admin Console' },
+    { to: '/admin/categories', label: 'Categories' },
+  ],
 };
 
 const HOME_BY_ROLE = { ATTENDEE: '/attendee', ORGANIZER: '/organizer', ADMIN: '/admin' };

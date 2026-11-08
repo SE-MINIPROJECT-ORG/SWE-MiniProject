@@ -80,4 +80,75 @@ async function listByOrganizer(organizerId) {
   return rows;
 }
 
-module.exports = { categoryExists, listCategories, createEvent, findById, setStatus, searchPublished, listByOrganizer };
+// ---- Edit and cancel (EVT-F-012, EVT-F-014). These run inside a transaction. ----
+
+async function lockEvent(client, id) {
+  const { rows } = await client.query('SELECT * FROM events WHERE id = $1 FOR UPDATE', [id]);
+  return rows[0] || null;
+}
+
+async function countSeatsTaken(client, id) {
+  const { rows } = await client.query(
+    "SELECT COUNT(*)::int AS taken FROM registrations WHERE event_id = $1 AND status IN ('CONFIRMED', 'CHECKED_IN')",
+    [id]
+  );
+  return rows[0].taken;
+}
+
+async function updateEvent(client, id, e) {
+  const { rows } = await client.query(
+    `UPDATE events SET category_id = $2, title = $3, description = $4, venue = $5,
+            start_time = $6, end_time = $7, capacity = $8
+      WHERE id = $1 RETURNING *`,
+    [id, e.categoryId, e.title, e.description, e.venue, e.startTime, e.endTime, e.capacity]
+  );
+  return rows[0];
+}
+
+async function markCancelled(client, id) {
+  await client.query("UPDATE events SET status = 'CANCELLED' WHERE id = $1", [id]);
+}
+
+// Cancels every active registration and returns who to notify.
+async function cancelRegistrations(client, eventId) {
+  const { rows } = await client.query(
+    `UPDATE registrations r SET status = 'CANCELLED', queue_position = NULL
+       FROM users u
+      WHERE u.id = r.user_id AND r.event_id = $1 AND r.status IN ('CONFIRMED', 'WAITLISTED')
+     RETURNING r.id, r.ticket_id, u.id AS user_id, u.name, u.email`,
+    [eventId]
+  );
+  return rows;
+}
+
+// ---- Categories (EVT-F-015) ----
+
+async function findCategory(id) {
+  const { rows } = await db.query('SELECT id, name FROM categories WHERE id = $1', [id]);
+  return rows[0] || null;
+}
+
+async function createCategory(name) {
+  const { rows } = await db.query('INSERT INTO categories (name) VALUES ($1) RETURNING id, name', [name]);
+  return rows[0];
+}
+
+async function renameCategory(id, name) {
+  const { rows } = await db.query('UPDATE categories SET name = $2 WHERE id = $1 RETURNING id, name', [id, name]);
+  return rows[0] || null;
+}
+
+async function countEventsInCategory(id) {
+  const { rows } = await db.query('SELECT COUNT(*)::int AS n FROM events WHERE category_id = $1', [id]);
+  return rows[0].n;
+}
+
+async function deleteCategory(id) {
+  await db.query('DELETE FROM categories WHERE id = $1', [id]);
+}
+
+module.exports = {
+  categoryExists, listCategories, createEvent, findById, setStatus, searchPublished, listByOrganizer,
+  lockEvent, countSeatsTaken, updateEvent, markCancelled, cancelRegistrations,
+  findCategory, createCategory, renameCategory, countEventsInCategory, deleteCategory,
+};

@@ -1,8 +1,8 @@
 // Event data rules (EVT-F-011): title required, start in the future, end after start,
-// capacity a whole number from 1 to 10000.
-function asText(value) {
-  return typeof value === 'string' ? value.trim() : '';
-}
+// capacity a whole number from 1 to 10000. Text is cleaned on the server (EVT-SR-003).
+const { cleanText } = require('../../utils/sanitize');
+
+const asText = cleanText;
 
 function asDate(value) {
   if (typeof value !== 'string' || !value) return null;
@@ -69,4 +69,13 @@ function validateSearch(query = {}) {
   return { errors, value: { q, page, categoryId, from, to } };
 }
 
-module.exports = { validateEvent, validateSearch, PAGE_SIZE };
+// Category names (EVT-F-015): 1 to 50 characters.
+function validateCategory(body = {}) {
+  const name = asText(body.name);
+  const errors = [];
+  if (!name) errors.push({ field: 'name', message: 'Category name is required' });
+  else if (name.length > 50) errors.push({ field: 'name', message: 'Category name must be at most 50 characters' });
+  return { errors, value: { name } };
+}
+
+module.exports = { validateEvent, validateSearch, validateCategory, PAGE_SIZE };
