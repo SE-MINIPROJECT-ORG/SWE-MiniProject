@@ -1,6 +1,7 @@
 # Runs the whole system: database, mail catcher, backend API and frontend.
 # Start:  docker compose up --build
-# App: http://localhost:8080   API: http://localhost:5000/health   Mail: http://localhost:8025
+# App: https://localhost:8443 (http://localhost:8080 redirects there)
+# API for local tools only: http://localhost:5000/health   Mail: http://localhost:8025
 services:
   db:
     image: postgres:16-alpine
@@ -33,10 +34,13 @@ services:
       JWT_SECRET: ${JWT_SECRET:-dev-only-secret-change-me}
       SMTP_HOST: mailhog
       SMTP_PORT: 1025
+      # Raise only for the load and concurrency tests (EVT-NF-001, EVT-NF-004).
+      API_RATE_LIMIT: ${API_RATE_LIMIT:-100}
     # Apply migrations and test accounts, then start the API.
     command: sh -c "node db/migrate.js && node db/seed.js && node src/server.js"
+    # Bound to this computer only, for local tools and tests. Browsers use HTTPS through the frontend.
     ports:
-      - "5000:5000"
+      - "127.0.0.1:5000:5000"
     depends_on:
       db:
         condition: service_healthy
@@ -45,6 +49,7 @@ services:
     build: ./frontend
     ports:
       - "8080:80"
+      - "8443:443"
     depends_on:
       - backend
 

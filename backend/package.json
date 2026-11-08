@@ -10,7 +10,8 @@
     "test": "jest --coverage",
     "lint": "eslint .",
     "migrate": "node db/migrate.js",
-    "seed": "node db/seed.js"
+    "seed": "node db/seed.js",
+    "test:concurrency": "node scripts/concurrency-test.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -21,7 +22,8 @@
     "jsonwebtoken": "^9.0.3",
     "node-cron": "^3.0.3",
     "nodemailer": "^6.10.1",
-    "pg": "^8.11.5"
+    "pg": "^8.11.5",
+    "qrcode": "^1.5.4"
   },
   "devDependencies": {
     "eslint": "^8.57.0",

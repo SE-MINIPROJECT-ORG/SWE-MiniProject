@@ -62,6 +62,11 @@ export default function MyEventsPage() {
                   Check-in
                 </Link>
               )}
+              {event.status !== 'DRAFT' && (
+                <Link className="button-link secondary" to={`/organizer/events/${event.id}/registrations`}>
+                  Registrations
+                </Link>
+              )}
             </div>
             {event.status === 'DRAFT' && (
               <button type="button" className="primary" onClick={() => publish(event)}>

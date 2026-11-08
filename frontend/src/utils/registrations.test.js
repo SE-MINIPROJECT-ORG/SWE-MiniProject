@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { statusLabel, canCancel, registerResultMessage } from './registrations.js';
+import { statusLabel, canCancel, registerResultMessage, hasTicket, countByStatus } from './registrations.js';
 
 const now = new Date('2026-11-01T10:00:00Z');
 const reg = (change = {}) => ({
@@ -34,5 +34,21 @@ describe('registerResultMessage', () => {
   it('shows the ticket ID or the waitlist position', () => {
     expect(registerResultMessage(reg())).toContain('TKT-1');
     expect(registerResultMessage(reg({ status: 'WAITLISTED', queuePosition: 4 }))).toContain('position 4');
+  });
+});
+
+describe('hasTicket', () => {
+  it('is true only for confirmed or checked-in registrations', () => {
+    expect(hasTicket(reg())).toBe(true);
+    expect(hasTicket(reg({ status: 'CHECKED_IN' }))).toBe(true);
+    expect(hasTicket(reg({ status: 'WAITLISTED' }))).toBe(false);
+    expect(hasTicket(reg({ status: 'CANCELLED' }))).toBe(false);
+  });
+});
+
+describe('countByStatus', () => {
+  it('counts registrations per status', () => {
+    const counts = countByStatus([reg(), reg(), reg({ status: 'WAITLISTED' }), reg({ status: 'CHECKED_IN' })]);
+    expect(counts).toEqual({ CONFIRMED: 2, WAITLISTED: 1, CANCELLED: 0, CHECKED_IN: 1 });
   });
 });

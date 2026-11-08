@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext.jsx';
 import { registrationsApi } from '../services/registrationsApi.js';
 import { formatDateTime } from '../utils/events.js';
-import { canCancel, statusLabel } from '../utils/registrations.js';
+import { canCancel, hasTicket, statusLabel } from '../utils/registrations.js';
 
 // The attendee's own registrations with status, and Cancel (EVT-F-025, EVT-F-023).
 export default function MyRegistrationsPage() {
@@ -28,6 +28,7 @@ export default function MyRegistrationsPage() {
     try {
       await registrationsApi.cancel(registration.id, token);
       setMessage(`Cancelled: ${registration.event.title}`);
+      // Another attendee may have been promoted from the waitlist (EVT-F-024).
       load();
     } catch (err) {
       setError(err.message);
@@ -57,11 +58,18 @@ export default function MyRegistrationsPage() {
               <span className={`badge badge-${registration.status.toLowerCase()}`}>{statusLabel(registration)}</span>
               {registration.status === 'CONFIRMED' && <span className="ticket"> Ticket: {registration.ticketId}</span>}
             </p>
-            {canCancel(registration) && (
-              <button type="button" className="danger" onClick={() => cancel(registration)}>
-                Cancel registration
-              </button>
-            )}
+            <div className="button-row">
+              {hasTicket(registration) && (
+                <Link className="button-link" to={`/attendee/tickets/${registration.id}`}>
+                  View ticket
+                </Link>
+              )}
+              {canCancel(registration) && (
+                <button type="button" className="danger" onClick={() => cancel(registration)}>
+                  Cancel registration
+                </button>
+              )}
+            </div>
           </article>
         ))}
       </div>

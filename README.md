@@ -70,9 +70,11 @@ docker compose up --build
 
 | What | URL |
 |------|-----|
-| Web app | http://localhost:8080 |
+| Web app (HTTPS) | https://localhost:8443 (http://localhost:8080 redirects there) |
 | API health check | http://localhost:5000/health |
 | Test emails (MailHog) | http://localhost:8025 |
+
+The certificate is self-signed for local use, so the browser shows a warning the first time: choose **Advanced** and **Continue to localhost**. The connection is still encrypted.
 
 The backend applies the database migrations and creates the test accounts on start. All test accounts use the password `Test@1234`: `attendee1@ems.test` to `attendee4@ems.test`, `organizer1@ems.test`, `organizer2@ems.test` and `admin@ems.test`.
 
