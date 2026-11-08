@@ -2,14 +2,17 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext.jsx';
 import { eventsApi } from '../services/eventsApi.js';
-import { formatDateTime } from '../utils/events.js';
+import { canChangeEvent, formatDateTime } from '../utils/events.js';
 
 // Organizer dashboard: own events in every status, with Publish for drafts (EVT-F-013).
 export default function MyEventsPage() {
   const { token } = useAuth();
   const location = useLocation();
   const [events, setEvents] = useState([]);
-  const [message, setMessage] = useState(location.state && location.state.created ? `Draft saved: ${location.state.created}` : '');
+  const state = location.state || {};
+  const [message, setMessage] = useState(
+    state.created ? `Draft saved: ${state.created}` : state.updated ? `Changes saved: ${state.updated}` : ''
+  );
   const [error, setError] = useState('');
 
   const load = useCallback(() => {
@@ -27,6 +30,20 @@ export default function MyEventsPage() {
     try {
       await eventsApi.publish(event.id, token);
       setMessage(`Published: ${event.title}`);
+      load();
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  // Cancelling an event also cancels all its registrations and notifies attendees (EVT-F-014).
+  const cancelEvent = async (event) => {
+    if (!window.confirm(`Cancel "${event.title}"? All registrations will be cancelled and attendees notified.`)) return;
+    setError('');
+    setMessage('');
+    try {
+      const data = await eventsApi.cancel(event.id, token);
+      setMessage(`Cancelled: ${event.title} (${data.event.registrationsCancelled} registrations cancelled)`);
       load();
     } catch (err) {
       setError(err.message);
@@ -66,6 +83,16 @@ export default function MyEventsPage() {
                 <Link className="button-link secondary" to={`/organizer/events/${event.id}/registrations`}>
                   Registrations
                 </Link>
+              )}
+              {canChangeEvent(event) && (
+                <>
+                  <Link className="button-link secondary" to={`/organizer/events/${event.id}/edit`}>
+                    Edit
+                  </Link>
+                  <button type="button" className="danger" onClick={() => cancelEvent(event)}>
+                    Cancel event
+                  </button>
+                </>
               )}
             </div>
             {event.status === 'DRAFT' && (

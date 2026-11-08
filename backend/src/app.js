@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
 const requestId = require('./middleware/requestId');
 const { apiLimiter } = require('./middleware/rateLimiter');
 const { notFound, errorHandler } = require('./middleware/errorHandler');
@@ -16,6 +17,8 @@ const app = express();
 app.set('trust proxy', 1);
 
 app.use(requestId);
+// Security headers on every API response (EVT-SR-003).
+app.use(helmet());
 app.use(cors());
 app.use(express.json({ limit: '100kb' }));
 
