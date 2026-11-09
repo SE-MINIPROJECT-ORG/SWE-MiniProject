@@ -10,6 +10,7 @@ const BY_ROLE = {
   ORGANIZER: [{ to: '/organizer', label: 'My Events' }],
   ADMIN: [
     { to: '/admin', label: 'Admin Console' },
+    { to: '/admin/users', label: 'Users' },
     { to: '/admin/categories', label: 'Categories' },
   ],
 };

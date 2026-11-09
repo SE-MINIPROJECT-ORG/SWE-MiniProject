@@ -59,6 +59,14 @@ export function AuthProvider({ children }) {
     update(null);
   }, [session, update]);
 
+  // Keeps the shown name up to date after the user edits their profile (EVT-F-007).
+  const updateUser = useCallback(
+    (user) => {
+      if (session) update({ ...session, user: { ...session.user, ...user } });
+    },
+    [session, update]
+  );
+
   const value = useMemo(
     () => ({
       user: session ? session.user : null,
@@ -66,8 +74,9 @@ export function AuthProvider({ children }) {
       role: session ? session.user.role : 'VISITOR',
       login,
       logout,
+      updateUser,
     }),
-    [session, login, logout]
+    [session, login, logout, updateUser]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

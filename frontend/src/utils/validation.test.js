@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { validateSignUp, fieldErrors } from './validation.js';
+import { validateSignUp, fieldErrors, validatePasswordChange } from './validation.js';
 
 const valid = { name: 'Asha Rao', email: 'asha@test.com', password: 'Passw0rd1' };
 
@@ -25,5 +25,19 @@ describe('validateSignUp', () => {
 describe('fieldErrors', () => {
   it('maps backend details to form fields', () => {
     expect(fieldErrors({ details: [{ field: 'email', message: 'Bad' }] })).toEqual({ email: 'Bad' });
+  });
+});
+
+describe('validatePasswordChange', () => {
+  const ok = { currentPassword: 'Passw0rd1', newPassword: 'Newpass22', confirmPassword: 'Newpass22' };
+
+  it('accepts a valid change', () => {
+    expect(validatePasswordChange(ok)).toEqual({});
+  });
+
+  it('requires the current password and a matching, valid new one', () => {
+    expect(Object.keys(validatePasswordChange({ ...ok, currentPassword: '' }))).toEqual(['currentPassword']);
+    expect(validatePasswordChange({ ...ok, newPassword: 'short', confirmPassword: 'short' }).newPassword).toMatch(/8 characters/);
+    expect(validatePasswordChange({ ...ok, confirmPassword: 'Other123' }).confirmPassword).toMatch(/do not match/);
   });
 });

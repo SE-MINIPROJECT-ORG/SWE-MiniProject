@@ -425,3 +425,18 @@ button.danger {
   display: flex;
   gap: 0.5rem;
 }
+
+/* Profile and admin users (F1) */
+.narrow h2 {
+  margin-top: 2rem;
+}
+
+.table select {
+  padding: 0.3rem;
+  font: inherit;
+}
+
+.table button {
+  padding: 0.35rem 0.8rem;
+  font-size: 0.9rem;
+}

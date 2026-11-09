@@ -14,6 +14,8 @@ import TicketPage from './pages/TicketPage.jsx';
 import EventRegistrationsPage from './pages/EventRegistrationsPage.jsx';
 import EditEventPage from './pages/EditEventPage.jsx';
 import AdminCategoriesPage from './pages/AdminCategoriesPage.jsx';
+import AdminUsersPage from './pages/AdminUsersPage.jsx';
+import ProfilePage from './pages/ProfilePage.jsx';
 import RolePage from './pages/RolePage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
@@ -102,6 +104,22 @@ export default function App() {
           element={
             <RequireRole roles={['ADMIN']}>
               <AdminCategoriesPage />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <RequireRole roles={['ATTENDEE', 'ORGANIZER', 'ADMIN']}>
+              <ProfilePage />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/admin/users"
+          element={
+            <RequireRole roles={['ADMIN']}>
+              <AdminUsersPage />
             </RequireRole>
           }
         />

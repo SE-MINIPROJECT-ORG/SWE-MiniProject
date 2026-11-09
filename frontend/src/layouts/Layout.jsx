@@ -46,7 +46,9 @@ export default function Layout() {
           {user && (
             <>
               <NavLink to="/notifications">{unreadText(unread)}</NavLink>
-              <span className="user-name">{user.name}</span>
+              <NavLink to="/profile" className="user-name" title="My profile">
+                {user.name}
+              </NavLink>
               <button type="button" className="link-button" onClick={handleLogout}>
                 Logout
               </button>
