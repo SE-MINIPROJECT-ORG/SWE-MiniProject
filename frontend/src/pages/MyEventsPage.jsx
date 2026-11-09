@@ -80,9 +80,14 @@ export default function MyEventsPage() {
                 </Link>
               )}
               {event.status !== 'DRAFT' && (
-                <Link className="button-link secondary" to={`/organizer/events/${event.id}/registrations`}>
-                  Registrations
-                </Link>
+                <>
+                  <Link className="button-link secondary" to={`/organizer/events/${event.id}/registrations`}>
+                    Registrations
+                  </Link>
+                  <Link className="button-link secondary" to={`/organizer/events/${event.id}/report`}>
+                    Report
+                  </Link>
+                </>
               )}
               {canChangeEvent(event) && (
                 <>

@@ -13,13 +13,13 @@ describe('getNavLinks', () => {
     expect(labels('ATTENDEE')).not.toContain('My Events');
   });
 
-  it('shows the admin console and categories only to an admin', () => {
-    expect(labels('ADMIN')).toContain('Admin Console');
+  it('shows the admin dashboard, users and categories only to an admin', () => {
+    expect(labels('ADMIN')).toContain('Dashboard');
     expect(labels('ADMIN')).toContain('Categories');
     expect(labels('ADMIN')).toContain('Users');
     expect(labels('ORGANIZER')).not.toContain('Users');
     expect(labels('ORGANIZER')).not.toContain('Categories');
-    expect(labels('ORGANIZER')).not.toContain('Admin Console');
+    expect(labels('ORGANIZER')).not.toContain('Dashboard');
   });
 
   it('treats an unknown role like a visitor', () => {

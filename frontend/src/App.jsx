@@ -16,7 +16,8 @@ import EditEventPage from './pages/EditEventPage.jsx';
 import AdminCategoriesPage from './pages/AdminCategoriesPage.jsx';
 import AdminUsersPage from './pages/AdminUsersPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
-import RolePage from './pages/RolePage.jsx';
+import EventReportPage from './pages/EventReportPage.jsx';
+import AdminDashboardPage from './pages/AdminDashboardPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
 export default function App() {
@@ -55,7 +56,7 @@ export default function App() {
           path="/admin"
           element={
             <RequireRole roles={['ADMIN']}>
-              <RolePage title="Admin console" />
+              <AdminDashboardPage />
             </RequireRole>
           }
         />
@@ -120,6 +121,14 @@ export default function App() {
           element={
             <RequireRole roles={['ADMIN']}>
               <AdminUsersPage />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/organizer/events/:id/report"
+          element={
+            <RequireRole roles={['ORGANIZER', 'ADMIN']}>
+              <EventReportPage />
             </RequireRole>
           }
         />
