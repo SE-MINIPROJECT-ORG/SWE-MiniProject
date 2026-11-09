@@ -16,6 +16,8 @@ describe('getNavLinks', () => {
   it('shows the admin console and categories only to an admin', () => {
     expect(labels('ADMIN')).toContain('Admin Console');
     expect(labels('ADMIN')).toContain('Categories');
+    expect(labels('ADMIN')).toContain('Users');
+    expect(labels('ORGANIZER')).not.toContain('Users');
     expect(labels('ORGANIZER')).not.toContain('Categories');
     expect(labels('ORGANIZER')).not.toContain('Admin Console');
   });

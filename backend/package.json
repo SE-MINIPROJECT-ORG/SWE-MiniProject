@@ -12,7 +12,8 @@
     "migrate": "node db/migrate.js",
     "seed": "node db/seed.js",
     "test:concurrency": "node scripts/concurrency-test.js",
-    "monitor": "node scripts/uptime-monitor.js"
+    "monitor": "node scripts/uptime-monitor.js",
+    "test:load": "node scripts/load-test.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
