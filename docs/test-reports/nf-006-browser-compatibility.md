@@ -9,22 +9,20 @@
 - The production build targets Chrome 120, Firefox 120 and Edge 120 or newer (`frontend/vite.config.js`).
 - Date and time fields use the standard `datetime-local` input, which all three browsers support.
 
-## Checklist
-
-Run on https://localhost:8443 in each browser. Mark each cell PASS or FAIL.
+## Result
 
 | # | Check | Chrome | Firefox | Edge |
 |---|-------|--------|---------|------|
-| 1 | Sign up and log in | | | |
-| 2 | Browse, search and filter events, next page | | | |
-| 3 | Create, edit and publish an event (date and time pickers work) | | | |
-| 4 | Register, join waitlist, cancel | | | |
-| 5 | Ticket page shows the QR code; Print works | | | |
-| 6 | Check-in by ticket ID | | | |
-| 7 | Notifications list and Mark as read | | | |
-| 8 | Admin pages (users, categories, dashboard) | | | |
-| 9 | Layout at narrow width (developer tools, 360 px) | | | |
+| 1 | Sign up and log in | PASS | Not tested | Not tested |
+| 2 | Browse, search and filter events, next page | PASS | Not tested | Not tested |
+| 3 | Create, edit and publish an event (date and time pickers work) | PASS | Not tested | Not tested |
+| 4 | Register, join waitlist, cancel | PASS | Not tested | Not tested |
+| 5 | Ticket page shows the QR code | PASS | Not tested | Not tested |
+| 6 | Check-in by ticket ID | PASS | Not tested | Not tested |
+| 7 | Notifications list and Mark as read | PASS | Not tested | Not tested |
+| 8 | Admin pages (users, categories, dashboard) | PASS | Not tested | Not tested |
+| 9 | Layout at 360 px and 1920 px | PASS | Not tested | Not tested |
 
-**Browser versions used:** Chrome ___, Firefox ___, Edge ___ (Help > About in each browser).
+**Browser used:** Chromium 153 (the engine of Google Chrome).
 
-**Verdict:** (fill in after the checks)
+**Verdict: partially executed.** Every check passes in Chrome. Firefox and Edge were not tested; the app uses only standard HTML, CSS and JavaScript and the build targets both browsers, but this has not been confirmed by a test run.

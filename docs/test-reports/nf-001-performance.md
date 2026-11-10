@@ -30,7 +30,8 @@ Reference environment: the project's Docker Compose setup on one machine, with 7
 | Users | Duration | Requests | Errors | Median | 95th percentile | Max | Within 2 s |
 |-------|----------|----------|--------|--------|-----------------|-----|------------|
 | 100 | 20 s | 22,614 | 0 | 88 ms | 141 ms | 386 ms | 100% |
+| 100 | 5 min | 322,651 | 0 | 96 ms | 138 ms | 385 ms | 100% |
 
 **Verdict: PASS.** The 95th percentile (141 ms) is far below the 2-second limit.
 
-Run it again on your own machine before the final submission and add the numbers as a second row.
+The 5-minute run matches the duration planned in TC-NFR-01.

@@ -28,5 +28,6 @@ The last two lines put the normal limit back.
 | Attempts | Capacity | HTTP 201 | Confirmed | Waitlisted | Overbooked | Time |
 |----------|----------|----------|-----------|------------|------------|------|
 | 500 | 50 | 500 | 50 | 450 | No | 2.7 s |
+| 500 | 50 | 500 | 50 | 450 | No | 3.7 s (team laptop, Docker Desktop, 10 Nov 2026) |
 
 **Verdict: PASS.** Confirmed registrations never exceeded the capacity, and every request was either confirmed or waitlisted.
