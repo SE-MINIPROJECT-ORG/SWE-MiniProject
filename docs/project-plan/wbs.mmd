@@ -1,0 +1,24 @@
+flowchart TD
+  P["EMS Project"]
+  P --> M["1 Project management"]
+  P --> R["2 Requirements"]
+  P --> T["3 Test planning"]
+  P --> D["4 Design"]
+  P --> E["5 Environment and setup"]
+  P --> I["6 Implementation"]
+  P --> Q["7 Testing and quality"]
+  P --> C["8 Documentation and delivery"]
+  M --> M1["1.1 Proposal and plan<br/>1.2 Backlog and board<br/>1.3 Sprint reviews"]
+  R --> R1["2.1 SRS per feature<br/>2.2 Use case diagrams"]
+  T --> T1["3.1 Test plan<br/>3.2 53 test cases"]
+  D --> D1["4.1 Architecture<br/>4.2 Data model and API<br/>4.3 Sequence diagrams<br/>4.4 Security design"]
+  E --> E1["5.1 Repo and organization<br/>5.2 Backend and frontend scaffold<br/>5.3 Database<br/>5.4 CI and Docker"]
+  I --> I1["6.1 F1 Authentication<br/>6.2 F2 Events<br/>6.3 F3 Registration<br/>6.4 F4 Check-in and reports"]
+  Q --> Q1["7.1 Unit tests and coverage<br/>7.2 Performance and security tests<br/>7.3 System test execution"]
+  C --> C1["8.1 Videos<br/>8.2 Final report<br/>8.3 Presentation and demo"]
+  classDef top fill:#1f3a5f,color:#fff,stroke:#1f3a5f
+  classDef l1 fill:#e0eaff,stroke:#1f3a5f,color:#1f2933
+  classDef l2 fill:#fff,stroke:#9aa5b1,color:#1f2933
+  class P top
+  class M,R,T,D,E,I,Q,C l1
+  class M1,R1,T1,D1,E1,I1,Q1,C1 l2
