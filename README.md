@@ -137,11 +137,13 @@ All work is done on feature branches and merged into `main` through reviewed pul
 ## Sprint Reviews
 
 - [Sprint 1 review, demo video and deviations](docs/sprint-reviews/sprint-1-review.md)
+- [Sprint 2 review, demo video and deviations](docs/sprint-reviews/sprint-2-review.md)
+- [Test reports for the non-functional and security requirements](docs/test-reports/)
 
 ## Project Status
 
 - [x] Requirements (SRS)
 - [x] Architecture and Design (SAD)
 - [x] Test Plan
-- [ ] Implementation (Sprint 1 done, Sprint 2 in progress)
+- [x] Implementation (Sprints 1 and 2 done, development frozen)
 - [ ] System validation and demo
