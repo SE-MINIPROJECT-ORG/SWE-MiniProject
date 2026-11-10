@@ -3,7 +3,7 @@
 **Owner:** Varun Rao (PES1UG24CS520)
 **Covers:** EVT-F-001 to EVT-F-007, EVT-NF-001, EVT-SR-001, EVT-SR-002
 
-**Execution:** all test cases were run on 10 Nov 2026 against `main` at the end of Sprint 2 (commit 2fe85c5), on a fresh database with the seeded test accounts and the mock SMTP service. Steps were carried out through the web interface in Chrome and through the REST API, with database queries to confirm the stored state. Test data was adjusted only where noted in the Actual Result column.
+**Execution:** all test cases were run on 10 Nov 2026 against `main` at the end of Sprint 2 (commit 2fe85c5), on a fresh database with the seeded test accounts and the mock SMTP service. Steps were carried out through the web interface in Chrome and through the REST API, with database queries to confirm the stored state. Test cases changed by the sprints are marked "Updated after Sprint 2" in their Steps or Expected Result.
 
 **Feature owner:** Varun Rao (PES1UG24CS520). **Executed:** 10 Nov 2026.
 
@@ -28,7 +28,7 @@ Level in brackets: Unit (U), Integration (I) or System (S).
 
 | Test Case ID | Module | Description | Pre-conditions | Steps | Test Data | Expected Result | Actual Result | Result |
 |---|---|---|---|---|---|---|---|---|
-| TC-NFR-01 | F1 Performance (S) | Response time under load (EVT-NF-001) | Reference test environment with seeded data | 1) Run a JMeter plan with 100 concurrent users on login, event list and registration calls for 5 minutes; 2) Read the 95th percentile response time | 100 virtual users, 5 min | 95th percentile is at or below 2 seconds | The team load-test script (backend/scripts/load-test.js) was used instead of JMeter: 100 concurrent users for 5 minutes on event list, search, event page, categories and My registrations: 322,651 requests, 0 errors, median 96 ms, 95th percentile 138 ms, max 385 ms; 100% within 2 s. Login is not in the mix (bcrypt is slow by design and the login rate limit applies); registration under load is covered by TC-NFR-04 (500 at once in 2-3 s) | Pass |
+| TC-NFR-01 | F1 Performance (S) | Response time under load (EVT-NF-001) | Reference test environment with seeded data | 1) Run backend/scripts/load-test.js with 100 concurrent users for 5 minutes on event list, search, event page, categories and My registrations; 2) Read the 95th percentile response time (Updated after Sprint 2.) | 100 virtual users, 5 min | 95th percentile is at or below 2 seconds | 322,651 requests, 0 errors, median 96 ms, 95th percentile 138 ms, max 385 ms; 100% within 2 s. Login is not in the mix (bcrypt is slow by design and the login rate limit applies); registration under load is covered by TC-NFR-04 | Pass |
 
 ## Security test cases (TC-SEC)
 
