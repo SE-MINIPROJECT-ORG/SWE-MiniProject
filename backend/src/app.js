@@ -10,6 +10,7 @@ const { eventsRouter, categoriesRouter } = require('./modules/events/events.rout
 const registrationsRouter = require('./modules/registrations/registrations.routes');
 const checkinRouter = require('./modules/checkin/checkin.routes');
 const notificationsRouter = require('./modules/notifications/notifications.routes');
+const reportsRouter = require('./modules/reports/reports.routes');
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use('/api/categories', categoriesRouter);
 app.use('/api', registrationsRouter);
 app.use('/api', checkinRouter);
 app.use('/api/notifications', notificationsRouter);
+app.use('/api', reportsRouter);
 
 app.use(notFound);
 app.use(errorHandler);

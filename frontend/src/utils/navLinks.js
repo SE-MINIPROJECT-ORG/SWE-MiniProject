@@ -9,7 +9,7 @@ const BY_ROLE = {
   ATTENDEE: [{ to: '/attendee', label: 'My Registrations' }],
   ORGANIZER: [{ to: '/organizer', label: 'My Events' }],
   ADMIN: [
-    { to: '/admin', label: 'Admin Console' },
+    { to: '/admin', label: 'Dashboard' },
     { to: '/admin/users', label: 'Users' },
     { to: '/admin/categories', label: 'Categories' },
   ],
