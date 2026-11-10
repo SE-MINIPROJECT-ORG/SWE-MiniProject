@@ -14,36 +14,17 @@ Check: running Jest with the threshold temporarily raised to 95% makes it exit w
 | Metric | Result | Target |
 |--------|--------|--------|
 | Lines | 86.8% | 70% |
+| Branches | 78.6% | not set |
 | Statements | 85.3% | 70% |
 | Backend unit tests | 205 passed, 0 failed | all pass |
 | Frontend unit tests | 36 passed, 0 failed | all pass |
 
-## Static analysis (SonarQube)
+Full figures per file: [coverage-report.md](coverage-report.md).
 
-`sonar-project.properties` points SonarQube at the backend and frontend code and the backend coverage report, and `sonar.qualitygate.wait=true` makes the scanner fail when the quality gate fails. The default "Sonar way" gate fails on new blocker or critical issues.
+## Static analysis
 
-How to run (Docker Desktop open, from the repository root):
+ESLint runs in CI on every pull request for the backend and the frontend, and a lint error fails the check, so it blocks the merge. Result at the end of Sprint 2: 0 errors.
 
-```
-docker compose -f docker-compose.sonar.yml up -d
-```
+SonarQube was planned as the static-analysis tool. The setup is in the repository (`docker-compose.sonar.yml`, `sonar-project.properties`), but the analysis was not run: the quality gate is enforced by ESLint and the coverage threshold in CI instead. This is recorded as a deviation for TC-NFR-05.
 
-Open http://localhost:9000, log in with `admin` / `admin` and set a new password, create a local project with the key `ems`, and generate a token. Then:
-
-```
-cd backend
-npm test
-cd ..
-docker run --rm -e SONAR_HOST_URL=http://host.docker.internal:9000 -e SONAR_TOKEN=<your-token> -v "${PWD}:/usr/src" sonarsource/sonar-scanner-cli
-```
-
-## SonarQube result
-
-| Item | Result |
-|------|--------|
-| Quality gate | (fill in: Passed / Failed) |
-| Blocker issues | |
-| Critical issues | |
-| Coverage shown | |
-
-Add a screenshot of the SonarQube project page next to this file as `sonarqube-result.png`.
+**Verdict: PASS with deviation.** Coverage and lint gates pass; SonarQube analysis not run.
